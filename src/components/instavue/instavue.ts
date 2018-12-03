@@ -6,21 +6,9 @@ import * as twitterFetcher from 'twitter-fetcher'
 export default class socialVue {
   private appElement;
   public vueApp;
-  public instaElement;
-  public twitElement;
-  public faceElement;
-  public configProfile;
-  public tweetCollection;
-  public newA;
 
-  public constructor(instaElement: HTMLElement, twitElement: HTMLElement, faceElement: HTMLElement, appElement: HTMLElement) {
-    this.instaElement = instaElement;
-    this.twitElement = twitElement;
-    this.faceElement = faceElement;
+  public constructor(appElement: HTMLElement) {
     this.appElement = appElement;
-  let tweetCollection = [];
-    let newTArray= [];
-
     this.vueApp = new Vue({
       el: this.appElement,
       data: {
@@ -31,7 +19,7 @@ export default class socialVue {
         grams: [],
         instagram_next_url: "",
         //facebook
-        facebook_access_token: "EAAEJ47TyfHoBAKQzKPTUrWCMSqiuUivcTZBtjjVlAqy7vKOBZAoxMmeJLb6PfDJbNs2KBVLbxXwo48K3jexEz6rfNUe8EqtZBE4emVeCKDZBzxGH1ZCwTZBaGq18YKHhqSbzZAhRQOmq7jcRAZBcFbQld7ujbzTCZAyqBMOXZA5liMLo2FExeV93MW5xQfTZBD9UOy9RQOLLLFd7gZDZD",
+        facebook_access_token: "EAAEJ47TyfHoBADITZAnJ2L6ZA35ZAw3FZCOFKKZAZBcBj3juUVtt9LXZCfKBonT4oMqNZACIh20SA5Y5qvbGpCWDZAg1M9ZB1ZBafkYHo5wbjsW77TpwF40rioTQZC9LG7tQFaSNezG2Bv9xoS8HiWvG0zAO0f1S6v0c91DfGjgtfxBeCEDovLlmWdZBeUZC5ZC4vId6FrZBFxDa7DkaYQZDZD",
         facebook_url: "https://graph.facebook.com/v3.2/",
         facebook__field_getter: "/feed?fields=message,created_time,id,full_picture,picture,likes",
         facebook_user_id: "301249666926209",
@@ -41,16 +29,33 @@ export default class socialVue {
         show_facebook: true,
         show_instagram: true,
         error: false,
-        twits:tweetCollection,
         isActive: false,
+        extraViewerClass: 'active',
 
       },
       computed: {
-        instapage() {
-          return 'https://www.instagram.com/' + this.instagram_username
-        }
+
       },
       methods: {
+        twitterHandle() {
+          let twiterblocks = this.$refs.twitter;
+          for (let i = 0; i < twiterblocks.length; i++) {
+            twiterblocks[i].classList.toggle('hidden')
+
+          }
+        },
+        facebookHandle() {
+          let facebooklocks = this.$refs.facebook;
+          for (let i = 0; i < facebooklocks.length; i++) {
+            facebooklocks[i].classList.toggle('hidden')
+          }
+        },
+        instagramHandle() {
+          let instagramblocks = this.$refs.instagram;
+          for (let i = 0; i < instagramblocks.length; i++) {
+            instagramblocks[i].classList.toggle('hidden')
+          }
+        },
         getTweets() {
           let configProfile = {
             "profile": { "screenName": 'mhmargareth' },
@@ -66,7 +71,7 @@ export default class socialVue {
           };
           twitterFetcher.fetch(configProfile);
         },
-         createTwitterFeed(arrayTweets) {
+        createTwitterFeed(arrayTweets) {
 
           for (let i = 0; i < arrayTweets.length; i++) {
             arrayTweets[i].origin = "twitter";
@@ -99,6 +104,7 @@ export default class socialVue {
         getPosts() {
           axios.get(this.facebook_url + this.facebook_user_id + this.facebook__field_getter + "&access_token=" + this.facebook_access_token)
             .then(({ data }) => {
+
               this.posts = data.data;
               for (let i = 0; i < this.posts.length; i++) {
                 this.posts[i].origin = "facebook";
@@ -157,12 +163,6 @@ export default class socialVue {
         this.getPosts();
         this.getTweets();
       },
-      mounted() {
-        // this.getTwits();
-      },
-      // mounted(){
-      //   this.createArray();
-      // }
     });
 
   }
@@ -176,13 +176,7 @@ function instaVueInit() {
   if (socialVueApp.length > 0) {
     for (let i = 0; i < socialVueApp.length; i++) {
       let thisElement = <HTMLElement>socialVueApp[i];
-      let instagramDiv = thisElement.querySelector('div.instagram') as HTMLElement;
-      let twitterDiv = thisElement.querySelector('div.twitter') as HTMLElement;
-      let facebookDiv = thisElement.querySelector('div.facebook') as HTMLElement;
-      new socialVue(
-        instagramDiv, twitterDiv, facebookDiv, thisElement
-
-      );
+      new socialVue(thisElement);
 
     }
   }
