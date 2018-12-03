@@ -19,7 +19,7 @@ export default class socialVue {
         grams: [],
         instagram_next_url: "",
         //facebook
-        facebook_access_token: "EAAEJ47TyfHoBADITZAnJ2L6ZA35ZAw3FZCOFKKZAZBcBj3juUVtt9LXZCfKBonT4oMqNZACIh20SA5Y5qvbGpCWDZAg1M9ZB1ZBafkYHo5wbjsW77TpwF40rioTQZC9LG7tQFaSNezG2Bv9xoS8HiWvG0zAO0f1S6v0c91DfGjgtfxBeCEDovLlmWdZBeUZC5ZC4vId6FrZBFxDa7DkaYQZDZD",
+        facebook_access_token: "EAAEJ47TyfHoBABvYBt5K8K6rjBZACaUD8CDwfmhf6m62JUiEwsNSZARoSct3zbBDZAzIDLNQUnCW1rgX9LRzN1NZAoFij6wKWo6auZBPn0uR5xYRV8UwdWtCtXkYX8HnAWFDG335MMGq4vq9SfP1VuAjD14VSZCVzLMftR5BtYTFVoUkoxrFZCrYjcXG1jiSAmP2HcclxLk7wZDZD",
         facebook_url: "https://graph.facebook.com/v3.2/",
         facebook__field_getter: "/feed?fields=message,created_time,id,full_picture,picture,likes",
         facebook_user_id: "301249666926209",
