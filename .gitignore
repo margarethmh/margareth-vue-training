@@ -1,0 +1,6 @@
+/node_modules
+/build
+/fractal
+
+node_modules
+node_modules/*
