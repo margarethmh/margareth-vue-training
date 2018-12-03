@@ -1,0 +1,37 @@
+<div class="social-app">
+  <div class="checkbox">
+    <label><input type="checkbox" v-model="show_twitter">Twitter</label>
+    <label><input type="checkbox" v-model="show_facebook">Facebook</label>
+    <label><input type="checkbox" v-model="show_instagram">Instagram</label>
+  </div>
+<div class="blocks">
+   <div class="blocks__block" v-if="blocks.length > 0" v-for="(block, index) in blocks" :class="block.origin">
+
+    <a href="" class="blocks__block__link" v-if="show_instagram && block.origin =='instagram' " >
+      <div class="blocks__block__img" v-if="block.images.standard_resolution.url" :style="{ backgroundImage: 'url(' + block.images.standard_resolution.url + ')' }"  ></div>
+
+      <div class="blocks__block__caption__container" v-if="block.caption"><p class="blocks__block__caption" v-html="block.caption.text"></p></div>
+    </a>
+
+     <a href="" class="blocks__block__link" v-if="show_facebook && block.origin =='facebook' ">
+      <div class="blocks__block__img" v-if="block.full_picture" :style="{ backgroundImage: 'url(' + block.full_picture + ')' }"  ></div>
+
+      <div class="blocks__block__caption__container" v-if="block.message"><p class="blocks__block__caption" v-html="block.message"></p></div>
+    </a>
+
+
+     <a href="" class="blocks__block__link" v-if="show_twitter && block.origin =='twitter' " >
+      <div class="blocks__block__img" v-if="block.image" :style="{ backgroundImage: 'url(' + block.image + ')' }"  ></div>
+
+      <div class="blocks__block__caption__container" v-if="block.tweet"><p class="blocks__block__caption" v-html="block.tweet"></p></div>
+    </a>
+
+
+
+
+
+  </div>
+
+</div>
+
+</div>

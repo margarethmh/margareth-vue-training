@@ -1,0 +1,51 @@
+$id5-yellow:#f7a81f;
+$id5-teal:#00a98d;
+$id5-purple:#3c335e;
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,600i,700,700i');
+$sansSerif: 'Source Sans Pro',
+sans-serif;
+html {
+    font-family: $sansSerif;
+    box-sizing: border-box;
+    line-height: 1.4;
+    font-weight: 400;
+    font-size: 18px;
+    @include media ('medium') {
+        font-size: 18px;
+    }
+}
+
+body {
+    margin: 0;
+    font-size: 16px;
+    @include media ('medium') {
+        font-size: 18px;
+    }
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+p {
+    margin-top: 0;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: $id5-purple;
+    padding: rem(10);
+    transition: 0.2s;
+    font-weight: 700;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
