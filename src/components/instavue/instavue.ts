@@ -19,7 +19,7 @@ export default class socialVue {
         grams: [],
         instagram_next_url: "",
         //facebook
-        facebook_access_token: "EAAEJ47TyfHoBABvYBt5K8K6rjBZACaUD8CDwfmhf6m62JUiEwsNSZARoSct3zbBDZAzIDLNQUnCW1rgX9LRzN1NZAoFij6wKWo6auZBPn0uR5xYRV8UwdWtCtXkYX8HnAWFDG335MMGq4vq9SfP1VuAjD14VSZCVzLMftR5BtYTFVoUkoxrFZCrYjcXG1jiSAmP2HcclxLk7wZDZD",
+        facebook_access_token: "EAAEJ47TyfHoBAGCHWcUmPur9KHzGE5bcsXj4NEi2qNPiSYC804O6tUCW6SwkRZBifWv9MtMzT2rUOCMUqe5uaPwhlj7ZCxA8ZBJZCq4H9pL4fbXdtnwWOo7EjEo98F8oyIYGCePKyjBGREZBs1HK3VqGAOLH0yeHgOrBrCZCXUuIUZCiH06NWF9o4MtP0lsubWo1K589pcQZCwZDZD",
         facebook_url: "https://graph.facebook.com/v3.2/",
         facebook__field_getter: "/feed?fields=message,created_time,id,full_picture,picture,likes",
         facebook_user_id: "301249666926209",
@@ -31,13 +31,24 @@ export default class socialVue {
         error: false,
         isActive: false,
         extraViewerClass: 'active',
+        numberItems: 6,
 
       },
       computed: {
 
       },
+      filters: {
+
+      },
       methods: {
-        twitterHandle() {
+        showMore(){
+          this.numberItems = this.numberItems+3;
+       },
+        characterLimit: function (text, length){
+          let clamp = '...';
+          return text.length > length ? text.slice(0, length) + clamp : text;
+        },
+        twitterHandle(show_twitter) {if(show_twitter){console.log(show_twitter)}
           let twiterblocks = this.$refs.twitter;
           for (let i = 0; i < twiterblocks.length; i++) {
             twiterblocks[i].classList.toggle('hidden')
@@ -60,7 +71,7 @@ export default class socialVue {
           let configProfile = {
             "profile": { "screenName": 'mhmargareth' },
             "domId": 'exampleProfile',
-            "maxTweets": 10,
+            "maxTweets": 20,
             "enableLinks": true,
             "showUser": true,
             "showTime": true,
@@ -76,6 +87,7 @@ export default class socialVue {
           for (let i = 0; i < arrayTweets.length; i++) {
             arrayTweets[i].origin = "twitter";
             arrayTweets[i].newIndex = i;
+            arrayTweets[i].newCaption = this.characterLimit(arrayTweets[i].tweet , 100)
 
           }
           this.createArray(arrayTweets)
@@ -88,6 +100,8 @@ export default class socialVue {
               for (let i = 0; i < this.grams.length; i++) {
                 this.grams[i].origin = "instagram";
                 this.grams[i].newIndex = i;
+                if( this.grams[i].caption){ this.grams[i].newCaption = this.characterLimit(this.grams[i].caption.text , 90)}
+
               }
               this.createArray(this.grams)
               // console.log(this.grams)
@@ -110,7 +124,8 @@ export default class socialVue {
                 this.posts[i].origin = "facebook";
                 this.posts[i].newIndex = i;
                 this.posts[i].fullUrl = "https://facebook.com/" + this.posts[i].id;
-                this.posts[i].origin = "facebook";
+                if( this.posts[i].message){ this.posts[i].newCaption = this.characterLimit(this.posts[i].message , 120)}
+
                 // delete this.posts[key];
               }
               // this.blocks=this.blocks.concat(this.posts);
