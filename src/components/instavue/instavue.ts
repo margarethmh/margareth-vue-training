@@ -9,6 +9,7 @@ export default class socialVue {
 
   public constructor(appElement: HTMLElement) {
     this.appElement = appElement;
+
     this.vueApp = new Vue({
       el: this.appElement,
       data: {
@@ -19,19 +20,20 @@ export default class socialVue {
         grams: [],
         instagram_next_url: "",
         //facebook
-        facebook_access_token: "EAAEJ47TyfHoBAGCHWcUmPur9KHzGE5bcsXj4NEi2qNPiSYC804O6tUCW6SwkRZBifWv9MtMzT2rUOCMUqe5uaPwhlj7ZCxA8ZBJZCq4H9pL4fbXdtnwWOo7EjEo98F8oyIYGCePKyjBGREZBs1HK3VqGAOLH0yeHgOrBrCZCXUuIUZCiH06NWF9o4MtP0lsubWo1K589pcQZCwZDZD",
+        facebook_access_token: "EAAEJ47TyfHoBAMnWKiVuGuewHVXMZA7zanwwh3OzJVjkJkqbZCZAmgImHmbhAylFDTzR5wDFURr4eweXviVd6ZAM54vCf1PbWFwx0G4iIQjViPZBga815fT0WkDVdTdQpuJGSxPRSYZCThLD87h2rEVSCZChpRUSYUWZAIcDZAFkZAhqFao49Ys9ZC5zDqlcaIL8GtMnoSVuKU7nQZDZD",
         facebook_url: "https://graph.facebook.com/v3.2/",
         facebook__field_getter: "/feed?fields=message,created_time,id,full_picture,picture,likes",
-        facebook_user_id: "301249666926209",
+        facebook_user_id: "me",
         posts: [],
         blocks: [],
         show_twitter: true,
         show_facebook: true,
         show_instagram: true,
         error: false,
-        isActive: false,
+        isActive: true,
         extraViewerClass: 'active',
         numberItems: 6,
+        showBlock: true,
 
       },
       computed: {
@@ -41,30 +43,62 @@ export default class socialVue {
 
       },
       methods: {
-        showMore(){
-          this.numberItems = this.numberItems+3;
-       },
-        characterLimit: function (text, length){
+        showMore() {
+          this.numberItems = this.numberItems + 3;
+          Vue.nextTick().then(() => {
+
+            this.twitterHandle();
+            this.facebookHandle(); this.instagramHandle();
+
+          });
+
+        },
+        characterLimit: function (text, length) {
           let clamp = '...';
           return text.length > length ? text.slice(0, length) + clamp : text;
         },
-        twitterHandle(show_twitter) {if(show_twitter){console.log(show_twitter)}
-          let twiterblocks = this.$refs.twitter;
-          for (let i = 0; i < twiterblocks.length; i++) {
-            twiterblocks[i].classList.toggle('hidden')
+        twitterHandle() {
+          // this.showBlock =!this.showBlock;
+          let twitterblocks = this.$refs.twitter;
+          if (!this.show_twitter) {
 
+            for (let i = 0; i < twitterblocks.length; i++) {
+              twitterblocks[i].classList.add('hidden')
+            }
           }
+          else {
+            for (let i = 0; i < twitterblocks.length; i++) {
+              twitterblocks[i].classList.remove('hidden')
+            }
+          }
+
         },
         facebookHandle() {
           let facebooklocks = this.$refs.facebook;
-          for (let i = 0; i < facebooklocks.length; i++) {
-            facebooklocks[i].classList.toggle('hidden')
+          if (!this.show_facebook) {
+            for (let i = 0; i < facebooklocks.length; i++) {
+              facebooklocks[i].classList.add('hidden')
+            }
           }
+          else {
+            for (let i = 0; i < facebooklocks.length; i++) {
+              facebooklocks[i].classList.remove('hidden')
+            }
+          }
+
         },
         instagramHandle() {
           let instagramblocks = this.$refs.instagram;
-          for (let i = 0; i < instagramblocks.length; i++) {
-            instagramblocks[i].classList.toggle('hidden')
+
+          if (!this.show_instagram) {
+            for (let i = 0; i < instagramblocks.length; i++) {
+              instagramblocks[i].classList.add('hidden')
+            }
+          }
+          else {
+            for (let i = 0; i < instagramblocks.length; i++) {
+              instagramblocks[i].classList.remove('hidden')
+            }
           }
         },
         getTweets() {
@@ -83,66 +117,52 @@ export default class socialVue {
           twitterFetcher.fetch(configProfile);
         },
         createTwitterFeed(arrayTweets) {
-
           for (let i = 0; i < arrayTweets.length; i++) {
             arrayTweets[i].origin = "twitter";
             arrayTweets[i].newIndex = i;
-            arrayTweets[i].newCaption = this.characterLimit(arrayTweets[i].tweet , 100)
-
+            arrayTweets[i].isActive = this.isActive;
+            arrayTweets[i].newCaption = this.characterLimit(arrayTweets[i].tweet, 100)
           }
           this.createArray(arrayTweets)
-
         },
         getGrams() {
-          axios.get(this.instagram_url + "?access_token=" + this.instagram_access_token)
-            .then(({ data }) => {
-              this.grams = data.data
-              for (let i = 0; i < this.grams.length; i++) {
-                this.grams[i].origin = "instagram";
-                this.grams[i].newIndex = i;
-                if( this.grams[i].caption){ this.grams[i].newCaption = this.characterLimit(this.grams[i].caption.text , 90)}
-
-              }
-              this.createArray(this.grams)
-              // console.log(this.grams)
-              //  this.blocks=this.blocks.concat(this.grams);
-              //  console.log(this.blocks)
-              this.instagram_username = data.data[0].user.username
-              this.instagram_next_url = data.pagination.next_url
-            })
-            .catch(function (error) {
-              console.log(error)
-              this.error = true
-            });
+          return axios.get(this.instagram_url + "?access_token=" + this.instagram_access_token)
         },
         getPosts() {
-          axios.get(this.facebook_url + this.facebook_user_id + this.facebook__field_getter + "&access_token=" + this.facebook_access_token)
-            .then(({ data }) => {
-
-              this.posts = data.data;
-              for (let i = 0; i < this.posts.length; i++) {
-                this.posts[i].origin = "facebook";
-                this.posts[i].newIndex = i;
-                this.posts[i].fullUrl = "https://facebook.com/" + this.posts[i].id;
-                if( this.posts[i].message){ this.posts[i].newCaption = this.characterLimit(this.posts[i].message , 120)}
-
-                // delete this.posts[key];
-              }
-              // this.blocks=this.blocks.concat(this.posts);
-              // console.log(this.blocks)
-              //console.log(this.posts)
-              this.createArray(this.posts)
-            })
-            .catch(function (error) {
-              console.log(error)
-              this.error = true
-            });
+          return axios.get(this.facebook_url + this.facebook_user_id + this.facebook__field_getter + "&access_token=" + this.facebook_access_token)
         },
-        // getTwits() {
-        //   console.log(this.twits);
-        //   this.createArray(this.twits)
-        //   // this.createArray(newTArray)
-        // },
+
+        getAllArrays() {
+          let vueApp = this;
+          this.getTweets();
+          axios.all([this.getPosts(), this.getGrams()]).then(axios.spread(function (facebook, instagram) {
+            // FACEBOOK POSTS
+            vueApp.posts = facebook.data.data;
+            if (facebook.data.data) {
+              for (let i = 0; i < vueApp.posts.length; i++) {
+                vueApp.posts[i].origin = "facebook";
+                vueApp.posts[i].newIndex = i;
+                vueApp.posts[i].isActive = vueApp.isActive;
+                vueApp.posts[i].fullUrl = "https://facebook.com/" + vueApp.posts[i].id;
+                if (vueApp.posts[i].message) { vueApp.posts[i].newCaption = vueApp.characterLimit(vueApp.posts[i].message, 120) }
+              }
+              vueApp.createArray(vueApp.posts);
+            }
+            // INATAGRAM POSTS
+            vueApp.grams = instagram.data.data;
+
+            for (let i = 0; i < vueApp.grams.length; i++) {
+              vueApp.grams[i].origin = "instagram";
+              vueApp.grams[i].newIndex = i;
+              if (vueApp.grams[i].caption) { vueApp.grams[i].newCaption = vueApp.characterLimit(vueApp.grams[i].caption.text, 90) }
+
+            }
+            vueApp.createArray(vueApp.grams)
+
+          }))
+
+        },
+
         createArray(array) {
           this.blocks = this.blocks.concat(array);
 
@@ -159,7 +179,8 @@ export default class socialVue {
 
           //Usage
           this.blocks.sort(predicateBy("newIndex"));
-          // console.log(this.blocks);
+
+          console.log(this.blocks);
         },
         getMoreGrams() {
           axios.get(this.instagram_next_url)
@@ -174,9 +195,7 @@ export default class socialVue {
         }
       },
       beforeMount() {
-        this.getGrams();
-        this.getPosts();
-        this.getTweets();
+        this.getAllArrays();
       },
     });
 

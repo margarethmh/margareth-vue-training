@@ -1,8 +1,8 @@
 <div class="social-app">
   <div class="checkbox">
-    <label><input type="checkbox" v-model="show_twitter" v-on:click="twitterHandle(show_twitter)">Twitter</label>
-    <label><input type="checkbox" v-model="show_facebook" v-on:click="facebookHandle">Facebook</label>
-    <label><input type="checkbox" v-model="show_instagram" v-on:click="instagramHandle">Instagram</label>
+    <label><input type="checkbox" v-model="show_twitter" @change="twitterHandle">Twitter</label>
+    <label><input type="checkbox" v-model="show_facebook" @change="facebookHandle">Facebook</label>
+    <label><input type="checkbox" v-model="show_instagram" @change="instagramHandle">Instagram</label>
   </div>
   <div class="blocks">
 
